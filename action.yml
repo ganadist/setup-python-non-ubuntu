@@ -59,6 +59,8 @@ runs:
         chmod +x "${LSB_RELEASE_SH}"
         echo "${LSB_RELEASE_PATH}:${PATH}" >> $GITHUB_PATH
         echo "lsb_release_path=${LSB_RELEASE_PATH}" >> $GITHUB_OUTPUT
+        cat "${LSB_RELEASE_PATH}"/lsb_release
+        "${LSB_RELEASE_PATH}"/lsb_release
     - name: Check env
       shell: bash
       run: |
