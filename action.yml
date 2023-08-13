@@ -66,6 +66,7 @@ runs:
       run: |
         echo ${PATH}
         echo ${{ steps.generate-lsb-release.outputs.lsb_release_path }}
+        ls -l ${{ steps.generate-lsb-release.outputs.lsb_release_path }}/lsb_release
         echo cat ${{ steps.generate-lsb-release.outputs.lsb_release_path }}/lsb_release
 
     - uses: actions/setup-python@v4
