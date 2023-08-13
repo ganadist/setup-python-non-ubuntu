@@ -25,6 +25,13 @@ inputs:
   allow-prereleases:
     description: "When 'true', a version range passed to 'python-version' input will match prerelease versions if no GA versions are found. Only 'x.y' version range is supported for CPython."
     default: false
+  linux-distribution:
+    description: "Not used yet, default is \"Ubuntu\""
+    default: Ubuntu
+  linux-distribution-version:
+    description: "Emulate Linux distribution version"
+    default: "18.04"
+
 outputs:
   python-version:
     description: "The installed Python or PyPy version. Useful when given a version range as input."
@@ -38,8 +45,19 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - run: echo
+    - name: Create dummy lsb_release command
       shell: bash
+      run: |
+        LSB_RELEASE_PATH=${{ runner.temp }}/lsb_release
+        LSB_RELEASE_SH=${{ runner.temp }}/lsb_release/lsb_release
+        rm -rf "${LSB_RELEASE_PATH}"
+        mkdir -p "${LSB_RELEASE_PATH}"
+        echo "#!/bin/bash" >> "${LSB_RELEASE_SH}"
+        echo echo ${{ inputs.linux-distribution }} >> "${LSB_RELEASE_SH}"
+        echo echo ${{ inputs.linux-distribution-version }} >> "${LSB_RELEASE_SH}"
+        chmod +x "${LSB_RELEASE_SH}"
+        echo "${LSB_RELEASE_PATH}:${PATH}" >> $GITHUB_PATH
+
     - uses: actions/setup-python@v4
       id: setup-python
       with:
