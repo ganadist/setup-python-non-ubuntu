@@ -46,6 +46,7 @@ runs:
   using: "composite"
   steps:
     - name: Create dummy lsb_release command
+      id: generate-lsb-release
       shell: bash
       run: |
         LSB_RELEASE_PATH=${{ runner.temp }}/lsb_release
@@ -57,6 +58,12 @@ runs:
         echo echo ${{ inputs.linux-distribution-version }} >> "${LSB_RELEASE_SH}"
         chmod +x "${LSB_RELEASE_SH}"
         echo "${LSB_RELEASE_PATH}:${PATH}" >> $GITHUB_PATH
+        echo "lsb_release_path=${LSB_RELEASE_PATH}" >> $GITHUB_OUTPUT
+    - name: Check env
+      shell: bash
+        echo ${PATH}
+        echo ${{ steps.generate-lsb-release.outputs.lsb_release_path }}
+        echo cat ${{ steps.generate-lsb-release.outputs.lsb_release_path }}
 
     - uses: actions/setup-python@v4
       id: setup-python
